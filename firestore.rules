@@ -1,0 +1,37 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default rule: Deny all reads and writes to any collection not explicitly defined.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Allow anyone to read the aggregated ground report summary.
+    match /summaries/groundReport {
+      allow read: if true;
+    }
+    
+    // Allow anyone to create feedback.
+    match /feedback/{feedbackId} {
+      allow create: if true;
+    }
+
+    // Allow anyone to read the aggregated live status of mandis.
+    match /mandi_live_status/{mandiId} {
+        allow read: if true;
+    }
+
+    // Allow anyone to submit a status update for a mandi.
+    match /mandi_status_updates/{updateId} {
+        allow create: if true;
+    }
+
+    // Allow anyone to read all public listings.
+    match /publicListings/{listingId} {
+      allow read: if true;
+      allow create: if true; // Allow anyone to create a new listing.
+    }
+  }
+}
